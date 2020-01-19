@@ -8,6 +8,7 @@ data class User(
     val code: String,
     val name: String,
     val role: String,
+    val password: String,
     val deleted: Boolean,
     val registeredDate: DateTime,
     val modifiedDate: DateTime
