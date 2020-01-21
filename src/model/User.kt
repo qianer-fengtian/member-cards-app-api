@@ -1,5 +1,6 @@
 package jp.co.anyplus.anyplab.webapp.membercards.model
 
+import io.ktor.auth.Principal
 import org.joda.time.DateTime
 import java.util.*
 
@@ -13,3 +14,9 @@ data class User(
     val registeredDate: DateTime,
     val modifiedDate: DateTime
 )
+
+data class UserPrincipal (
+    val code: String,
+    val username: String,
+    val role: String
+) : Principal {}
