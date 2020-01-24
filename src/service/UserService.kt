@@ -22,8 +22,9 @@ class UserService {
         transaction {
             user = Users
                 .select { Users.code.eq(code) }
-                .map { parseRow(it) }[0]
+                .map { parseRow(it) }
+                .getOrNull(0)
         }
-        return user ?: null
+        return user
     }
 }

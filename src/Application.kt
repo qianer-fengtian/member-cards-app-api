@@ -18,23 +18,32 @@ import jp.co.anyplus.anyplab.webapp.membercards.controller.departmentController
 import jp.co.anyplus.anyplab.webapp.membercards.controller.memberController
 import jp.co.anyplus.anyplab.webapp.membercards.exception.InvalidAuthorizationException
 import jp.co.anyplus.anyplab.webapp.membercards.exception.InvalidCredentialsException
+import jp.co.anyplus.anyplab.webapp.membercards.exception.UserNotFoundException
 import jp.co.anyplus.anyplab.webapp.membercards.model.User
 import jp.co.anyplus.anyplab.webapp.membercards.model.UserPrincipal
 import jp.co.anyplus.anyplab.webapp.membercards.service.UserService
 import org.jetbrains.exposed.sql.Database
 import java.lang.Exception
-
-fun initDB() {
-    val config = HikariConfig("/hikari.properties")
-    val ds = HikariDataSource(config)
-    Database.connect(ds)
-}
+import java.security.MessageDigest
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)
 
 @Suppress("unused") // Referenced in application.conf
 @kotlin.jvm.JvmOverloads
 fun Application.module(testing: Boolean = false) {
+    fun initDB() {
+        val host = environment.config.property("db.host").getString()
+        val port = environment.config.property("db.port").getString()
+        val dbname = environment.config.property("db.dbname").getString()
+        val username = environment.config.property("db.username").getString()
+        val password = environment.config.property("db.password").getString()
+        val config = HikariConfig()
+        config.jdbcUrl = "jdbc:postgresql://${host}:${port}/${dbname}"
+        config.username = username
+        config.password = password
+        val ds = HikariDataSource(config)
+        Database.connect(ds)
+    }
 
     val secret = environment.config.property("app.jwt.secret").getString()
     val simpleJwt = SimpleJWT(secret)
@@ -48,7 +57,10 @@ fun Application.module(testing: Boolean = false) {
         header(HttpHeaders.Authorization)
         header(HttpHeaders.ContentType)
         allowCredentials = true
-        anyHost()
+
+        val host = environment.config.property("web.host").getString()
+        val port = environment.config.property("web.port").getString()
+        host("${host}:${port}")
     }
 
     initDB()
@@ -85,14 +97,23 @@ fun Application.module(testing: Boolean = false) {
     routing {
         route("/login") {
             post {
+
                 val userService = UserService()
                 val user = call.receive<User>()
-                userService.get(user.code)?.let {
-                    if (user.password != it.password) {
-                        throw InvalidCredentialsException("Invalid credentials")
-                    }
-                    call.respond(mapOf("token" to simpleJwt.sign(it.code, it.name, it.role)))
+                val loginUser = userService.get(user.code)
+                if (loginUser == null) {
+                    call.respond(HttpStatusCode.NotFound, "User not found")
+                    return@post
                 }
+
+                val hashedPassword = MessageDigest.getInstance("SHA-256")
+                    .digest(user.password.toByteArray())
+                    .joinToString(separator = "") { "%02x".format(it) }
+                if (hashedPassword != loginUser.password) {
+                    call.respond(HttpStatusCode.Unauthorized, "Invalid credentials")
+                    return@post
+                }
+                call.respond(mapOf("token" to simpleJwt.sign(loginUser.code, loginUser.name, loginUser.role)))
             }
         }
 
@@ -103,6 +124,13 @@ fun Application.module(testing: Boolean = false) {
                     throw InvalidAuthorizationException("Invalid authorization")
                 }
                 return@intercept
+            }
+
+            route("/role") {
+                get {
+                    val principal = call.principal<UserPrincipal>() ?: error("No principal")
+                    call.respondText(principal.role)
+                }
             }
 
             memberController()
