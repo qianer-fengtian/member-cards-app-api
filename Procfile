@@ -1,0 +1,1 @@
+web: java -jar build/libs/member-cards-api-0.0.1-all.jar

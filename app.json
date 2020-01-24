@@ -1,0 +1,6 @@
+{
+  "name": "Anyplus++",
+  "description": "Member cards app for anyplus.",
+  "image": "heroku/java",
+  "addons": [ "heroku-postgresql" ]
+}
