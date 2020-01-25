@@ -107,11 +107,9 @@ fun Application.module(testing: Boolean = false) {
                     return@post
                 }
 
-                println(user.password)
                 val hashedPassword = MessageDigest.getInstance("SHA-256")
                     .digest(user.password.toByteArray())
                     .joinToString(separator = "") { "%02x".format(it) }
-                println(hashedPassword)
                 if (hashedPassword != loginUser.password) {
                     call.respond(HttpStatusCode.Unauthorized, "Invalid credentials")
                     return@post
