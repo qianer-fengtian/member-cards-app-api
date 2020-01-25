@@ -60,8 +60,7 @@ fun Application.module(testing: Boolean = false) {
         allowCredentials = true
 
         val host = environment.config.property("web.host").getString()
-        val port = environment.config.property("web.port").getString()
-        host("${host}:${port}")
+        host(host, schemes = listOf("http", "https"))
     }
 
     initDB()
