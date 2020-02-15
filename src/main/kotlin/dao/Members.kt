@@ -8,6 +8,8 @@ object Members : Table("members") {
     val name = varchar("name", 10)
     val avatar = binary("avatar", 1024*1024*1024)
     val birthDate = date("birth_date")
+    val joinedDate = date("joined_date")
+    val gender = varchar("gender", 1)
     val specialty = text("specialty")
     val selfAppeal = text("self_appeal")
     val departmentId = uuid("department_id").uniqueIndex()

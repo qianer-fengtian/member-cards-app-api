@@ -9,6 +9,8 @@ data class Member(
     val name: String,
     val avatar: ByteArray,
     val birthDate: DateTime,
+    val joinedDate: DateTime,
+    val gender: String,
     val specialty: String,
     val selfAppeal: String,
     val departmentId: UUID,

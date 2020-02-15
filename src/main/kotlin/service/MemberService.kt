@@ -13,6 +13,8 @@ private fun parseRow(row: ResultRow) = Member(
     name = row[Members.name],
     avatar = row[Members.avatar],
     birthDate = row[Members.birthDate],
+    joinedDate = row[Members.joinedDate],
+    gender = row[Members.gender],
     specialty = row[Members.specialty],
     selfAppeal = row[Members.selfAppeal],
     departmentId = row[Members.departmentId],
@@ -52,6 +54,8 @@ class MemberService {
                 it[Members.name] = member.name
                 it[Members.avatar] = member.avatar
                 it[Members.birthDate] = member.birthDate
+                it[Members.joinedDate] = member.joinedDate
+                it[Members.gender] = member.gender
                 it[Members.specialty] = member.specialty
                 it[Members.selfAppeal] = member.selfAppeal
                 it[Members.departmentId] = member.departmentId
@@ -69,6 +73,8 @@ class MemberService {
                 it[Members.name] = member.name
                 it[Members.avatar] = member.avatar
                 it[Members.birthDate] = member.birthDate
+                it[Members.joinedDate] = member.joinedDate
+                it[Members.gender] = member.gender
                 it[Members.specialty] = member.specialty
                 it[Members.selfAppeal] = member.selfAppeal
                 it[Members.departmentId] = member.departmentId
