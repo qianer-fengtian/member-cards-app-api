@@ -33,6 +33,11 @@ fun Route.memberController() {
             call.respond(member ?: 404)
         }
 
+        get("/statistics") {
+            val statistics = memberService.getStatistics()
+            call.respond(statistics)
+        }
+
         post {
             val member = call.receive<Member>()
             memberService.register(member)

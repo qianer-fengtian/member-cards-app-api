@@ -6,6 +6,7 @@ import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
 import java.util.*
+import kotlin.collections.HashMap
 
 private fun parseRow(row: ResultRow) = Member(
     id = row[Members.id],
@@ -44,6 +45,24 @@ class MemberService {
                 .map { parseRow(it) }[0]
         }
         return member ?: null
+    }
+
+    fun getStatistics(): Map<String, Any> {
+        var members = listOf<Member>()
+        transaction {
+            members = Members
+                .select { Members.deleted.eq(false) }
+                .map { parseRow(it) }
+        }
+
+        val statistics = hashMapOf(
+            "total" to members.count(),
+            "maleTotal" to members.filter { it.gender == "1" }.count(),
+            "femaleTotal" to members.filter { it.gender == "2" }.count(),
+            "numberOfHiresPerYear" to members.groupingBy { it.joinedDate.year }.eachCount().toSortedMap(),
+            "populationByAge" to members.groupingBy { DateTime.now().year - it.birthDate.year }.eachCount().toSortedMap()
+        )
+        return statistics
     }
 
     fun register(member: Member) : Unit {
