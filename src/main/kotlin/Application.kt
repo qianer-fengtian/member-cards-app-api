@@ -16,6 +16,7 @@ import io.ktor.request.httpMethod
 import io.ktor.request.receive
 import jp.co.anyplus.anyplab.webapp.membercards.controller.departmentController
 import jp.co.anyplus.anyplab.webapp.membercards.controller.memberController
+import jp.co.anyplus.anyplab.webapp.membercards.controller.teamController
 import jp.co.anyplus.anyplab.webapp.membercards.exception.InvalidAuthorizationException
 import jp.co.anyplus.anyplab.webapp.membercards.exception.InvalidCredentialsException
 import jp.co.anyplus.anyplab.webapp.membercards.exception.UserNotFoundException
@@ -135,6 +136,7 @@ fun Application.module(testing: Boolean = false) {
 
             memberController()
             departmentController()
+            teamController()
         }
     }
 }

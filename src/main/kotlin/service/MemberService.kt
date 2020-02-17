@@ -18,6 +18,7 @@ private fun parseRow(row: ResultRow) = Member(
     specialty = row[Members.specialty],
     selfAppeal = row[Members.selfAppeal],
     departmentId = row[Members.departmentId],
+    teamId = row[Members.teamId],
     deleted = row[Members.deleted],
     registeredDate = row[Members.registeredDate],
     modifiedDate = row[Members.modifiedDate]
@@ -75,6 +76,7 @@ class MemberService {
                 it[Members.specialty] = member.specialty
                 it[Members.selfAppeal] = member.selfAppeal
                 it[Members.departmentId] = member.departmentId
+                it[Members.teamId] = member.teamId
                 it[bool("deleted")] = false
                 it[date("registered_date")] = DateTime.now()
                 it[date("modified_date")] = DateTime.now()
@@ -93,6 +95,7 @@ class MemberService {
                 it[Members.specialty] = member.specialty
                 it[Members.selfAppeal] = member.selfAppeal
                 it[Members.departmentId] = member.departmentId
+                it[Members.teamId] = member.teamId
                 it[bool("deleted")] = member.deleted
                 it[date("modified_date")] = DateTime.now()
             }
