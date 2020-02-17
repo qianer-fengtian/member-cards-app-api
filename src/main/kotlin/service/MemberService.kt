@@ -10,7 +10,6 @@ import kotlin.collections.HashMap
 
 private fun parseRow(row: ResultRow) = Member(
     id = row[Members.id],
-    code = row[Members.code],
     name = row[Members.name],
     avatar = row[Members.avatar],
     birthDate = row[Members.birthDate],
@@ -32,7 +31,6 @@ class MemberService {
                 .select { Members.deleted.eq(false) }
                 .map { parseRow(it) }
                 .sortedByDescending { Members.registeredDate }
-                .sortedBy { Members.code }
         }
         return members
     }
@@ -69,7 +67,6 @@ class MemberService {
         transaction {
             val tmp = Members.insert {
                 it[Members.id] = UUID.randomUUID()
-                it[Members.code] = member.code
                 it[Members.name] = member.name
                 it[Members.avatar] = member.avatar
                 it[Members.birthDate] = member.birthDate
@@ -88,7 +85,6 @@ class MemberService {
     fun update(member: Member) : Unit {
         transaction {
             Members.update({ Members.id eq member.id }) {
-                it[Members.code] = member.code
                 it[Members.name] = member.name
                 it[Members.avatar] = member.avatar
                 it[Members.birthDate] = member.birthDate

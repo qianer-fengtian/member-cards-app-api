@@ -9,7 +9,6 @@ import java.util.*
 
 private fun parseRow(row: ResultRow) = Department(
     id = row[Departments.id],
-    code = row[Departments.code],
     name = row[Departments.name],
     deleted = row[Departments.deleted],
     registeredDate = row[Departments.registeredDate],
@@ -24,7 +23,6 @@ class DepartmentService {
                 .select { Departments.deleted.eq(false) }
                 .map { parseRow(it) }
                 .sortedByDescending { Departments.registeredDate }
-                .sortedBy { Departments.code }
         }
         return departments
     }
@@ -43,7 +41,6 @@ class DepartmentService {
         transaction {
             val tmp = Departments.insert {
                 it[Departments.id] = UUID.randomUUID()
-                it[Departments.code] = department.code
                 it[Departments.name] = department.name
                 it[bool("deleted")] = false
                 it[date("registered_date")] = DateTime.now()
@@ -55,7 +52,6 @@ class DepartmentService {
     fun update(department: Department) : Unit {
         transaction {
             Departments.update({ Departments.id eq department.id }) {
-                it[Departments.code] = department.code
                 it[Departments.name] = department.name
                 it[bool("deleted")] = department.deleted
                 it[date("modified_date")] = DateTime.now()

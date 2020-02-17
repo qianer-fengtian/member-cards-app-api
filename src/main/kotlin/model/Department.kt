@@ -5,7 +5,6 @@ import java.util.*
 
 data class Department(
     val id: UUID,
-    val code: String,
     val name: String,
     val deleted: Boolean,
     val registeredDate: DateTime,

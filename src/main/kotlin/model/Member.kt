@@ -5,7 +5,6 @@ import java.util.*
 
 data class Member(
     val id: UUID,
-    val code: String,
     val name: String,
     val avatar: ByteArray,
     val birthDate: DateTime,
