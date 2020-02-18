@@ -20,11 +20,7 @@ fun Route.memberController() {
     route("/members") {
         get {
             val members = memberService.getAll()
-            if (members.size > 0) {
-                call.respond(members)
-            } else {
-                call.respond(404)
-            }
+            call.respond(members)
         }
 
         get("/{id}") {
