@@ -8,6 +8,7 @@ object Members : Table("members") {
     val avatar = binary("avatar", 1024*1024*1024)
     val birthDate = date("birth_date")
     val joinedDate = date("joined_date")
+    val leftDate = date("left_date").nullable()
     val gender = varchar("gender", 1)
     val specialty = text("specialty")
     val selfAppeal = text("self_appeal")

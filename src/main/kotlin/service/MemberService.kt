@@ -14,6 +14,7 @@ private fun parseRow(row: ResultRow) = Member(
     avatar = row[Members.avatar],
     birthDate = row[Members.birthDate],
     joinedDate = row[Members.joinedDate],
+    leftDate = row[Members.leftDate],
     gender = row[Members.gender],
     specialty = row[Members.specialty],
     selfAppeal = row[Members.selfAppeal],
@@ -58,8 +59,9 @@ class MemberService {
             "total" to members.count(),
             "maleTotal" to members.filter { it.gender == "1" }.count(),
             "femaleTotal" to members.filter { it.gender == "2" }.count(),
-            "numberOfHiresPerYear" to members.groupingBy { it.joinedDate.year }.eachCount().toSortedMap(),
-            "populationByAge" to members.groupingBy { DateTime.now().year - it.birthDate.year }.eachCount().toSortedMap()
+            "numberOfJoinedPerYear" to members.groupingBy { it.joinedDate.year }.eachCount(),
+            "numberOfLeftPerYear" to members.filter { it.leftDate !== null }.groupingBy { it.leftDate?.year }.eachCount(),
+            "populationByAge" to members.groupingBy { DateTime.now().year - it.birthDate.year }.eachCount()
         )
         return statistics
     }
@@ -72,6 +74,7 @@ class MemberService {
                 it[Members.avatar] = member.avatar
                 it[Members.birthDate] = member.birthDate
                 it[Members.joinedDate] = member.joinedDate
+                it[Members.leftDate] = member.leftDate
                 it[Members.gender] = member.gender
                 it[Members.specialty] = member.specialty
                 it[Members.selfAppeal] = member.selfAppeal
@@ -91,6 +94,7 @@ class MemberService {
                 it[Members.avatar] = member.avatar
                 it[Members.birthDate] = member.birthDate
                 it[Members.joinedDate] = member.joinedDate
+                it[Members.leftDate] = member.leftDate
                 it[Members.gender] = member.gender
                 it[Members.specialty] = member.specialty
                 it[Members.selfAppeal] = member.selfAppeal
