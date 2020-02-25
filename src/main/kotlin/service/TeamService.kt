@@ -49,8 +49,8 @@ class TeamService {
                 it[name] = team.name
                 it[leaderId] = team.leaderId
                 it[bool("deleted")] = false
-                it[date("registered_date")] = DateTime.now()
-                it[date("modified_date")] = DateTime.now()
+                it[datetime("registered_date")] = DateTime.now()
+                it[datetime("modified_date")] = DateTime.now()
             }
         }
     }
@@ -61,7 +61,7 @@ class TeamService {
                 it[name] = team.name
                 it[leaderId] = team.leaderId
                 it[bool("deleted")] = team.deleted
-                it[date("modified_date")] = DateTime.now()
+                it[datetime("modified_date")] = DateTime.now()
             }
         }
     }

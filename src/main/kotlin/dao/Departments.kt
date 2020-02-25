@@ -6,6 +6,6 @@ object Departments : Table() {
     val id = uuid("id").primaryKey()
     val name = varchar("name", 10)
     val deleted = bool("deleted")
-    val registeredDate = date("registered_date")
-    val modifiedDate = date("modified_date")
+    val registeredDate = datetime("registered_date")
+    val modifiedDate = datetime("modified_date")
 }

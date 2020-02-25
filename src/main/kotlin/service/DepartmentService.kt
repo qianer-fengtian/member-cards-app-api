@@ -43,8 +43,8 @@ class DepartmentService {
                 it[Departments.id] = UUID.randomUUID()
                 it[Departments.name] = department.name
                 it[bool("deleted")] = false
-                it[date("registered_date")] = DateTime.now()
-                it[date("modified_date")] = DateTime.now()
+                it[datetime("registered_date")] = DateTime.now()
+                it[datetime("modified_date")] = DateTime.now()
             }
         }
     }
@@ -54,7 +54,7 @@ class DepartmentService {
             Departments.update({ Departments.id eq department.id }) {
                 it[Departments.name] = department.name
                 it[bool("deleted")] = department.deleted
-                it[date("modified_date")] = DateTime.now()
+                it[datetime("modified_date")] = DateTime.now()
             }
         }
     }

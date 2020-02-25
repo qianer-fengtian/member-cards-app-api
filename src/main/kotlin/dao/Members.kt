@@ -15,6 +15,6 @@ object Members : Table("members") {
     val departmentId = uuid("department_id")
     val teamId = uuid("team_id").nullable()
     val deleted = bool("deleted")
-    val registeredDate = date("registered_date")
-    val modifiedDate = date("modified_date")
+    val registeredDate = datetime("registered_date")
+    val modifiedDate = datetime("modified_date")
 }

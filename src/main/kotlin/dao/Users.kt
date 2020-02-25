@@ -9,6 +9,6 @@ object Users: Table() {
     val role = varchar("role", 10)
     val password = text("password")
     val deleted = bool("deleted")
-    val registeredDate = date("registered_date")
-    val modifiedDate = date("modified_date")
+    val registeredDate = datetime("registered_date")
+    val modifiedDate = datetime("modified_date")
 }

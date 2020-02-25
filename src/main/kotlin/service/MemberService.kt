@@ -81,8 +81,8 @@ class MemberService {
                 it[Members.departmentId] = member.departmentId
                 it[Members.teamId] = member.teamId
                 it[bool("deleted")] = false
-                it[date("registered_date")] = DateTime.now()
-                it[date("modified_date")] = DateTime.now()
+                it[datetime("registered_date")] = DateTime.now()
+                it[datetime("modified_date")] = DateTime.now()
             }
         }
     }
@@ -101,7 +101,7 @@ class MemberService {
                 it[Members.departmentId] = member.departmentId
                 it[Members.teamId] = member.teamId
                 it[bool("deleted")] = member.deleted
-                it[date("modified_date")] = DateTime.now()
+                it[datetime("modified_date")] = DateTime.now()
             }
         }
     }
