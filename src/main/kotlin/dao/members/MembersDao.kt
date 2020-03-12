@@ -1,8 +1,8 @@
-package jp.co.anyplus.anyplab.webapp.membercards.dao
+package jp.co.anyplus.anyplab.webapp.membercards.dao.members
 
 import org.jetbrains.exposed.sql.Table
 
-object Members : Table("members") {
+object MembersDao : Table("members") {
     val id = uuid("id").primaryKey()
     val name = varchar("name", 10)
     val avatar = binary("avatar", 1024*1024*1024)

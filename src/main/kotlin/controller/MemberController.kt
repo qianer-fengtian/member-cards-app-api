@@ -4,17 +4,11 @@ import io.ktor.application.call
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.*
-import jp.co.anyplus.anyplab.webapp.membercards.dao.Members
-import jp.co.anyplus.anyplab.webapp.membercards.model.Member
-import jp.co.anyplus.anyplab.webapp.membercards.service.DepartmentService
+import jp.co.anyplus.anyplab.webapp.membercards.model.members.Member
 import jp.co.anyplus.anyplab.webapp.membercards.service.MemberService
-import org.jetbrains.exposed.sql.*
-import org.jetbrains.exposed.sql.transactions.transaction
-import org.joda.time.DateTime
 import java.util.*
 
 private val memberService = MemberService()
-private val departmentService = DepartmentService()
 
 fun Route.memberController() {
     route("/members") {

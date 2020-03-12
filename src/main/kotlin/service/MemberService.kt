@@ -1,38 +1,22 @@
 package jp.co.anyplus.anyplab.webapp.membercards.service
 
-import jp.co.anyplus.anyplab.webapp.membercards.dao.Members
-import jp.co.anyplus.anyplab.webapp.membercards.model.Member
+import jp.co.anyplus.anyplab.webapp.membercards.dao.members.MembersDao
+import jp.co.anyplus.anyplab.webapp.membercards.dao.members.MembersJoiningsDao
+import jp.co.anyplus.anyplab.webapp.membercards.dao.members.VMembersDao
+import jp.co.anyplus.anyplab.webapp.membercards.model.members.Member
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
 import java.util.*
-import kotlin.collections.HashMap
-
-private fun parseRow(row: ResultRow) = Member(
-    id = row[Members.id],
-    name = row[Members.name],
-    avatar = row[Members.avatar],
-    birthDate = row[Members.birthDate],
-    joinedDate = row[Members.joinedDate],
-    leftDate = row[Members.leftDate],
-    gender = row[Members.gender],
-    specialty = row[Members.specialty],
-    selfAppeal = row[Members.selfAppeal],
-    departmentId = row[Members.departmentId],
-    teamId = row[Members.teamId],
-    deleted = row[Members.deleted],
-    registeredDate = row[Members.registeredDate],
-    modifiedDate = row[Members.modifiedDate]
-)
 
 class MemberService {
     fun getAll(): List<Member> {
         var members = listOf<Member>()
         transaction {
-            members = Members
-                .select { Members.deleted.eq(false) }
-                .map { parseRow(it) }
-                .sortedByDescending { Members.registeredDate }
+            members = VMembersDao
+                .select { VMembersDao.deleted.eq(false) }
+                .map { Member.parseRow(it) }
+                .sortedByDescending { VMembersDao.registeredDate }
         }
         return members
     }
@@ -40,9 +24,9 @@ class MemberService {
     fun get(id: UUID) : Member? {
         var member: Member? = null
         transaction {
-            member = Members
-                .select { Members.id.eq(id) }
-                .map { parseRow(it) }[0]
+            member = VMembersDao
+                .select { VMembersDao.id.eq(id) }
+                .map { Member.parseRow(it) }[0]
         }
         return member ?: null
     }
@@ -50,9 +34,9 @@ class MemberService {
     fun getStatistics(): Map<String, Any> {
         var members = listOf<Member>()
         transaction {
-            members = Members
-                .select { Members.deleted.eq(false) }
-                .map { parseRow(it) }
+            members = VMembersDao
+                .select { VMembersDao.deleted.eq(false) }
+                .map { Member.parseRow(it) }
         }
 
         val statistics = hashMapOf(
@@ -68,40 +52,51 @@ class MemberService {
 
     fun register(member: Member) : Unit {
         transaction {
-            val tmp = Members.insert {
-                it[Members.id] = UUID.randomUUID()
-                it[Members.name] = member.name
-                it[Members.avatar] = member.avatar
-                it[Members.birthDate] = member.birthDate
-                it[Members.joinedDate] = member.joinedDate
-                it[Members.leftDate] = member.leftDate
-                it[Members.gender] = member.gender
-                it[Members.specialty] = member.specialty
-                it[Members.selfAppeal] = member.selfAppeal
-                it[Members.departmentId] = member.departmentId
-                it[Members.teamId] = member.teamId
+            val memberId = UUID.randomUUID()
+            MembersDao.insert {
+                it[MembersDao.id] = memberId
+                it[MembersDao.name] = member.name
+                it[MembersDao.avatar] = member.avatar
+                it[MembersDao.birthDate] = member.birthDate
+                it[MembersDao.joinedDate] = member.joinedDate
+                it[MembersDao.leftDate] = member.leftDate
+                it[MembersDao.gender] = member.gender
+                it[MembersDao.specialty] = member.specialty
+                it[MembersDao.selfAppeal] = member.selfAppeal
+                it[MembersDao.departmentId] = member.departmentId
+                it[MembersDao.teamId] = member.teamId
                 it[bool("deleted")] = false
                 it[datetime("registered_date")] = DateTime.now()
                 it[datetime("modified_date")] = DateTime.now()
+            }
+
+            MembersJoiningsDao.insert {
+                it[MembersJoiningsDao.id] = UUID.randomUUID()
+                it[MembersJoiningsDao.memberId] = memberId
+                it[MembersJoiningsDao.joiningForm] = member.memberJoining?.joiningForm ?: "9"
             }
         }
     }
 
     fun update(member: Member) : Unit {
         transaction {
-            Members.update({ Members.id eq member.id }) {
-                it[Members.name] = member.name
-                it[Members.avatar] = member.avatar
-                it[Members.birthDate] = member.birthDate
-                it[Members.joinedDate] = member.joinedDate
-                it[Members.leftDate] = member.leftDate
-                it[Members.gender] = member.gender
-                it[Members.specialty] = member.specialty
-                it[Members.selfAppeal] = member.selfAppeal
-                it[Members.departmentId] = member.departmentId
-                it[Members.teamId] = member.teamId
+            MembersDao.update({ MembersDao.id eq member.id }) {
+                it[MembersDao.name] = member.name
+                it[MembersDao.avatar] = member.avatar
+                it[MembersDao.birthDate] = member.birthDate
+                it[MembersDao.joinedDate] = member.joinedDate
+                it[MembersDao.leftDate] = member.leftDate
+                it[MembersDao.gender] = member.gender
+                it[MembersDao.specialty] = member.specialty
+                it[MembersDao.selfAppeal] = member.selfAppeal
+                it[MembersDao.departmentId] = member.departmentId
+                it[MembersDao.teamId] = member.teamId
                 it[bool("deleted")] = member.deleted
                 it[datetime("modified_date")] = DateTime.now()
+            }
+
+            MembersJoiningsDao.update({ MembersJoiningsDao.memberId eq member.id}) {
+                it[MembersJoiningsDao.joiningForm] = member.memberJoining?.joiningForm ?: "9"
             }
         }
     }
