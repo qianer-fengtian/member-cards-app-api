@@ -1,8 +1,8 @@
-package jp.co.anyplus.anyplab.webapp.membercards.dao
+package jp.co.anyplus.anyplab.webapp.membercards.dao.teams
 
 import org.jetbrains.exposed.sql.Table
 
-object Teams : Table() {
+object TeamsDao : Table("teams") {
     val id = uuid("id").primaryKey()
     val name = varchar("name", 10)
     val leaderId = uuid("leader_id")

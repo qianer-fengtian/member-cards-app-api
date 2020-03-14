@@ -1,28 +1,20 @@
 package jp.co.anyplus.anyplab.webapp.membercards.service
 
-import jp.co.anyplus.anyplab.webapp.membercards.dao.Departments
-import jp.co.anyplus.anyplab.webapp.membercards.model.Department
+import jp.co.anyplus.anyplab.webapp.membercards.dao.departments.DepartmentsDao
+import jp.co.anyplus.anyplab.webapp.membercards.model.departments.Department
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
 import java.util.*
 
-private fun parseRow(row: ResultRow) = Department(
-    id = row[Departments.id],
-    name = row[Departments.name],
-    deleted = row[Departments.deleted],
-    registeredDate = row[Departments.registeredDate],
-    modifiedDate = row[Departments.modifiedDate]
-)
-
 class DepartmentService {
     fun getAll(): List<Department> {
         var departments = listOf<Department>()
         transaction {
-            departments = Departments
-                .select { Departments.deleted.eq(false) }
-                .map { parseRow(it) }
-                .sortedByDescending { Departments.registeredDate }
+            departments = DepartmentsDao
+                .select { DepartmentsDao.deleted.eq(false) }
+                .map { Department.parseRow(it) }
+                .sortedByDescending { DepartmentsDao.registeredDate }
         }
         return departments
     }
@@ -30,18 +22,18 @@ class DepartmentService {
     fun get(id: UUID) : Department? {
         var department: Department? = null
         transaction {
-            department = Departments
-                .select { Departments.id.eq(id) }
-                .map { parseRow(it) }[0]
+            department = DepartmentsDao
+                .select { DepartmentsDao.id.eq(id) }
+                .map { Department.parseRow(it) }[0]
         }
         return department ?: null
     }
 
     fun register(department: Department) : Unit {
         transaction {
-            val tmp = Departments.insert {
-                it[Departments.id] = UUID.randomUUID()
-                it[Departments.name] = department.name
+            val tmp = DepartmentsDao.insert {
+                it[id] = UUID.randomUUID()
+                it[name] = department.name
                 it[bool("deleted")] = false
                 it[datetime("registered_date")] = DateTime.now()
                 it[datetime("modified_date")] = DateTime.now()
@@ -51,8 +43,8 @@ class DepartmentService {
 
     fun update(department: Department) : Unit {
         transaction {
-            Departments.update({ Departments.id eq department.id }) {
-                it[Departments.name] = department.name
+            DepartmentsDao.update({ DepartmentsDao.id eq department.id }) {
+                it[name] = department.name
                 it[bool("deleted")] = department.deleted
                 it[datetime("modified_date")] = DateTime.now()
             }
