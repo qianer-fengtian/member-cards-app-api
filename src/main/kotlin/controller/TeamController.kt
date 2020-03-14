@@ -4,7 +4,7 @@ import io.ktor.application.call
 import io.ktor.request.receive
 import io.ktor.response.respond
 import io.ktor.routing.*
-import jp.co.anyplus.anyplab.webapp.membercards.model.Team
+import jp.co.anyplus.anyplab.webapp.membercards.model.teams.Team
 import jp.co.anyplus.anyplab.webapp.membercards.service.TeamService
 import java.util.*
 

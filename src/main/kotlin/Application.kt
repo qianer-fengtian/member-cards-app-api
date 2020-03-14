@@ -20,12 +20,10 @@ import jp.co.anyplus.anyplab.webapp.membercards.controller.statisticsController
 import jp.co.anyplus.anyplab.webapp.membercards.controller.teamController
 import jp.co.anyplus.anyplab.webapp.membercards.exception.InvalidAuthorizationException
 import jp.co.anyplus.anyplab.webapp.membercards.exception.InvalidCredentialsException
-import jp.co.anyplus.anyplab.webapp.membercards.exception.UserNotFoundException
-import jp.co.anyplus.anyplab.webapp.membercards.model.User
-import jp.co.anyplus.anyplab.webapp.membercards.model.UserPrincipal
+import jp.co.anyplus.anyplab.webapp.membercards.model.users.User
+import jp.co.anyplus.anyplab.webapp.membercards.model.users.UserPrincipal
 import jp.co.anyplus.anyplab.webapp.membercards.service.UserService
 import org.jetbrains.exposed.sql.Database
-import java.lang.Exception
 import java.security.MessageDigest
 
 fun main(args: Array<String>): Unit = io.ktor.server.netty.EngineMain.main(args)

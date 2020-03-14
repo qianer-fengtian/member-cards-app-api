@@ -14,9 +14,11 @@ fun Route.statisticsController() {
         get {
             val numbersOfEmployments = statisticsService.getNumbersOfEmployments()
             val numbersOfRetirements = statisticsService.getNumbersOfRetirements()
+            val memberStatistics = statisticsService.getMembersStatistics()
             call.respond(mapOf(
-                "numbers-of-employments" to numbersOfEmployments,
-                "numbers-of-retirements" to numbersOfRetirements
+                "numbersOfEmployments" to numbersOfEmployments,
+                "numbersOfRetirements" to numbersOfRetirements,
+                "memberStastics" to memberStatistics
             ))
         }
     }
