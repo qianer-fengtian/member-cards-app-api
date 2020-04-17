@@ -10,6 +10,7 @@ import org.jetbrains.exposed.sql.select
 import org.jetbrains.exposed.sql.selectAll
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
+import org.joda.time.Years
 
 class StatisticsService {
     fun getNumbersOfEmployments(): List<NumberOfEmployment> {
@@ -53,7 +54,7 @@ class StatisticsService {
             "total" to incumbents.count(),
             "maleTotal" to incumbents.filter { it.gender == "1" }.count(),
             "femaleTotal" to incumbents.filter { it.gender == "2" }.count(),
-            "populationByAge" to incumbents.groupingBy { DateTime.now().year - it.birthDate.year }.eachCount(),
+            "populationByAge" to incumbents.groupingBy { Years.yearsBetween(it.birthDate, DateTime.now()).years }.eachCount(),
             "newGraduates" to incumbents.filter { it.joiningForm == "0" }.count(),
             "midCareers" to incumbents.filter { it.joiningForm == "1" }.count()
         )
