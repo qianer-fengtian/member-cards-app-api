@@ -21,6 +21,28 @@ class MemberService {
         return members
     }
 
+    fun getEmployees(): List<Member> {
+        var members = listOf<Member>()
+        transaction {
+            members = VMembersDao
+                .select { VMembersDao.deleted.eq(false).and(VMembersDao.leftDate.isNull()) }
+                .map { Member.parseRow(it) }
+                .sortedByDescending { VMembersDao.registeredDate }
+        }
+        return members
+    }
+
+    fun getRetirees(): List<Member> {
+        var members = listOf<Member>()
+        transaction {
+            members = VMembersDao
+                .select { VMembersDao.deleted.eq(false).and(VMembersDao.leftDate.isNotNull()) }
+                .map { Member.parseRow(it) }
+                .sortedByDescending { VMembersDao.registeredDate }
+        }
+        return members
+    }
+
     fun get(id: UUID) : Member? {
         var member: Member? = null
         transaction {
