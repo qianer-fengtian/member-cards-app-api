@@ -17,6 +17,16 @@ fun Route.memberController() {
             call.respond(members)
         }
 
+        get("/employees") {
+            val employees = memberService.getEmployees()
+            call.respond(employees)
+        }
+
+        get("/retirees") {
+            val retirees = memberService.getRetirees()
+            call.respond(retirees)
+        }
+
         get("/{id}") {
             val id = UUID.fromString(call.parameters["id"])
             val member = memberService.get(id)
