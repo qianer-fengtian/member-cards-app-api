@@ -48,5 +48,28 @@ class Member(
                 modifiedDate = row[VMembersDao.modifiedDate]
             )
         }
+
+        fun parseRowWithoutAvatar(row: ResultRow): Member {
+            return Member(
+                id = row[VMembersDao.id],
+                name = row[VMembersDao.name],
+                avatar = byteArrayOf(),
+                gender = row[VMembersDao.gender],
+                birthDate = row[VMembersDao.birthDate],
+                joinedDate = row[VMembersDao.joinedDate],
+                leftDate = row[VMembersDao.leftDate],
+                specialty = row[VMembersDao.specialty],
+                selfAppeal = row[VMembersDao.selfAppeal],
+                departmentId = row[VMembersDao.departmentId],
+                departmentName = row[VMembersDao.departmentName],
+                teamId = row[VMembersDao.teamId],
+                teamName = row[VMembersDao.teamName],
+                joiningId = row[VMembersDao.joiningId],
+                joiningForm = row[VMembersDao.joiningForm],
+                deleted = row[VMembersDao.deleted],
+                registeredDate = row[VMembersDao.registeredDate],
+                modifiedDate = row[VMembersDao.modifiedDate]
+            )
+        }
     }
 }

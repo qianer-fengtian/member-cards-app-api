@@ -3,7 +3,10 @@ package jp.co.anyplus.anyplab.webapp.membercards.service
 import jp.co.anyplus.anyplab.webapp.membercards.dao.members.MembersDao
 import jp.co.anyplus.anyplab.webapp.membercards.dao.members.MembersJoiningsDao
 import jp.co.anyplus.anyplab.webapp.membercards.dao.members.VMembersDao
+import jp.co.anyplus.anyplab.webapp.membercards.dao.members.VMembersDao.nullable
+import jp.co.anyplus.anyplab.webapp.membercards.dao.members.VMembersDao.primaryKey
 import jp.co.anyplus.anyplab.webapp.membercards.model.members.Member
+import jp.co.anyplus.anyplab.webapp.membercards.model.members.MemberAvatar
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.transaction
 import org.joda.time.DateTime
@@ -15,7 +18,7 @@ class MemberService {
         transaction {
             members = VMembersDao
                 .select { VMembersDao.deleted.eq(false) }
-                .map { Member.parseRow(it) }
+                .map { Member.parseRowWithoutAvatar(it) }
                 .sortedByDescending { VMembersDao.registeredDate }
         }
         return members
@@ -26,10 +29,20 @@ class MemberService {
         transaction {
             members = VMembersDao
                 .select { VMembersDao.deleted.eq(false).and(VMembersDao.leftDate.isNull()) }
-                .map { Member.parseRow(it) }
+                .map { Member.parseRowWithoutAvatar(it) }
                 .sortedByDescending { VMembersDao.registeredDate }
         }
         return members
+    }
+
+    fun getEmployeeAvatars(): List<MemberAvatar> {
+        var memberAvatars = listOf<MemberAvatar>()
+        transaction {
+            memberAvatars = VMembersDao
+                .select { VMembersDao.deleted.eq(false).and(VMembersDao.leftDate.isNull()) }
+                .map { MemberAvatar.parseRow(it) }
+        }
+        return memberAvatars
     }
 
     fun getRetirees(): List<Member> {
@@ -37,7 +50,7 @@ class MemberService {
         transaction {
             members = VMembersDao
                 .select { VMembersDao.deleted.eq(false).and(VMembersDao.leftDate.isNotNull()) }
-                .map { Member.parseRow(it) }
+                .map { Member.parseRowWithoutAvatar(it) }
                 .sortedByDescending { VMembersDao.registeredDate }
         }
         return members
