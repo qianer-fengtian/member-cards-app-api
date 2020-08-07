@@ -22,6 +22,11 @@ fun Route.memberController() {
             call.respond(employees)
         }
 
+        get("/employees/avatars") {
+            val employeeAvatars = memberService.getEmployeeAvatars()
+            call.respond(employeeAvatars)
+        }
+
         get("/retirees") {
             val retirees = memberService.getRetirees()
             call.respond(retirees)
